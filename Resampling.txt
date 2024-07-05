@@ -1,0 +1,71 @@
+2024-07-05
+Imbalanced dataset for ML - Solutions
+
+1.under-sampling
+
+-generally used when having a huge amount of data
+-it is about randomly eliminating the samples from the majority class until balanced
+-pros: simple, reduce the modeling complexity, reduce the model runtime, reduce the storage requirements
+-cons: lost information that is contained by eliminated data, the reduced reduced training set may not be a correct representation of the population
+       that may cause the model not generalise well on unseen data
+
+
+2.over-sampling
+-used when data is less and cannot afford lossing info by doing under-sampling
+-increase the instances of the minority class by random replication of the present samples.
+-pros: no info lss, ourperform under-sampling in practice
+-cons: overfitting
+-key notes: do over-sampling afer train-test splitting, otherwise, dataset split could be uneven
+
+
+3.synthetic over-sampling(SMOTE)
+-it is based on KNN algorithms
+-a subset of minority data is taken and new synthetic data is generated based on it.
+-pros: avoid loss info as sub-sampling because there is no replication, avoid overfitting as over-sampling
+-cons: As vanilla SMOTE does not take the similar majority class samples into consideration while creating the synthetic examples of the minority class,
+       it may increase the class overlap and result in additional noise to the training dataset(MSMOTE is improved version)
+       and this method is not very effective in high-dimension datasets.
+
+4.synthetic over-sampling(ADASYN)
+-It is similar with SMOTE, but adds some noise and thus introduce some variance to the data generated from KNN.
+
+5. Gaussian Noise up-sampling(GNUS)
+-This is based on simple up-sampling but add random noise to improve variance and smooth the class boundary to reduce overfitting.
+
+
+4.choose algorithm wisely
+-Generally, ensamble methods, such as bagging methods(such as RF) and boosting method are more robust to imbalanced data
+- Combining multiple models or assigning higher weights to the minority class during ensemble learning can enhance the model’s ability to capture minority class patterns
+
+5.choose the right assessment metric
+
+6.play with the loss function
+-it is about minor modification of the exisitng algorithms
+-increase the weight of penalty when a sample from the minority class misclassfied.
+
+
+7.slove an anomaly dection problem - treat the minority class as outliers for highly imbalanced data
+
+8.Augamentation
+-this is under the same umbrella with upsampling.
+-For Computer Vision, if training set is small, could use flipping, zoom, rotating, cropping etc to increase the volume of training data
+-Or use generative models to generate synthetic data for minority class
+
+9.Transfer learning
+-find a model which suits your requirements, and then use your data to fine tune? This is good for small dataset, but how it works to imbalanced dataset?
+
+ 
+Questions:
+1. at what stage, resampling should be used? cleaning, resampling, splitting which comes first?
+2.why down sampling could cause the model doesn't perform well on unseen data? Is it because of the information lost as we eliminate some data from majority class?
+3.why up sampling need to be done before splitting
+4.Does transfer learning solve imbalanced data?
+5.Does transfer learning suit for non deep learning models?
+
+References
+
+https://medium.com/game-of-bits/how-to-deal-with-imbalanced-data-in-classification-bd03cfc66066
+https://biodatamining.biomedcentral.com/articles/10.1186/s13040-021-00283-6
+https://stats.stackexchange.com/questions/450634/why-decision-tree-handle-unbalanced-data-well
+https://towardsdatascience.com/how-to-handle-imbalance-data-and-small-training-sets-in-ml-989f8053531d
+https://medium.com/@data.pilot/7-techniques-to-handle-class-imbalance-in-machine-learning-eb1297419ec9
