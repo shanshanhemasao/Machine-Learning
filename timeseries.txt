@@ -1,0 +1,86 @@
+Timeseries Topic
+
+1. To analyse temporal data, either use  time seires models or use multivairiate regression(breaking historical temporal data into points and treat each 
+   as an input variable). For example, use day 0, day -1, day -2 .... as input variables to predict day 1(today). Regarding how many historical days data
+   we need, could use stepwise selection--the sliding window method used in Digi Ri is a use case here)
+
+2. When input variables include static input variables, then the traditional timeseires models may not work, need to use the modified version of these model.
+-Arima is suitable for univariate analysis
+-Arimax is suitable for multivariate analysis(endogenous variable + exogenous variable), but it is designed to handle predictors vary with time. For static 
+ variables(predictors dont vary with time, their effects will be absorbed into the intercept, so they dont contribut anything to the model)
+ https://stats.stackexchange.com/questions/379899/can-exogenous-variables-in-arimax-be-time-series-variables
+ 
+-VAR(Vector Auto Regression) is commonly used in multivariate time series analysis(each variable is a linear function of the past values of itself and the past 
+ values of all the other variables)
+-Comparison btw VAR and Arimax
+ they all handle multiple timeseries predictors
+ VAR: those time series predictors are interdependent each other
+ Arimax: one endogenous variable and others are exogenous variables
+ guessing: for those static predictors, wont contribute the both models
+ https://stats.stackexchange.com/questions/197762/arimax-vs-var-comparison
+
+3.Therefore, for multivariate timeseires with static preditors, having found two models feasible so far:
+-SEM(structural equation models) - not familiar with this
+-LSTM can work here,refer the following link
+ https://stackoverflow.com/questions/53363986/adding-static-data-not-changing-over-time-to-sequence-data-in-lstm
+
+
+static_out = (static_input)
+
+x = LSTM(n_cell_lstm, return_sequences=True)(dynamic_input)
+x = Flatten()(x)
+dynamic_out = (x)
+
+z = concatenate([dynamic_out, static_out])
+
+z = Dense(64, activation='relu')(z)
+
+main_output = Dense(classes, activation='softmax', name='main_output')(z)
+
+
+
+
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense, Input
+
+# Example data (time series and non-time series features)
+# X_time_series: shape (samples, time_steps, features)
+# X_static: shape (samples, static_features)
+
+# Define model architecture
+model = Sequential([
+    Input(shape=(time_steps, features)),  # Input for time series data
+    LSTM(units=50, activation='relu'),    # LSTM layer for sequential data
+    Dense(units=1),                       # Output layer for prediction
+    
+    # Optionally, concatenate non-time series input
+    Input(shape=(static_features)),       # Input for non-time series data
+    Dense(units=32, activation='relu'),   # Fully connected layer for non-time series data
+    
+    # Merge both inputs
+    tf.keras.layers.Concatenate(axis=1),  # Concatenate layers if needed
+    Dense(units=1)                        # Final output layer
+])
+
+# Compile the model
+model.compile(optimizer='adam', loss='mse')
+
+# Train the model
+model.fit([X_time_series, X_static], y, epochs=10, batch_size=32)
+
+
+
+References
+https://stats.stackexchange.com/questions/379899/can-exogenous-variables-in-arimax-be-time-series-variables
+https://stats.stackexchange.com/questions/197762/arimax-vs-var-comparison
+https://www.analyticsvidhya.com/blog/2018/09/multivariate-time-series-guide-forecasting-modeling-python-codes/
+
+
+Best online material for timeseries study
+https://www.reddit.com/r/learnmachinelearning/comments/mq54l2/whats_the_best_resource_to_learn_time_series/
+https://otexts.com/fpp3/
+https://www.itl.nist.gov/div898/handbook/pmc/section4/pmc4.htm
+https://www.youtube.com/playlist?list=PLvcbYUQ5t0UHOLnBzl46_Q6QKtFgfMGc3
+
