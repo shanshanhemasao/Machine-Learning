@@ -20,7 +20,11 @@ Timeseries Topic
  https://stats.stackexchange.com/questions/197762/arimax-vs-var-comparison
 
 3.Therefore, for multivariate timeseires with static preditors, having found two models feasible so far:
--SEM(structural equation models) - not familiar with this
+-SEM(structural equation models) - not familiar with this, it is not a single model, it is a framework incorporating severy techniques.
+-Structural Equation Modeling (SEM) assesses and estimates complex relationships among variables based on theoretical models, aiming to validate 
+ hypotheses and understand causal pathways in empirical data, it is path analysis using latent variables.
+https://www.youtube.com/watch?v=eKkESdyMG9w
+
 -LSTM can work here,refer the following link
  https://stackoverflow.com/questions/53363986/adding-static-data-not-changing-over-time-to-sequence-data-in-lstm
 
